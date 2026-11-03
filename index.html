@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorme.web</title>
+<style>
+  :root {
+    --green: #74c476;
+    --green-light: #e4f4e6;
+    --green-bg: #f1faf2;
+    --green-line: #c7e5c9;
+    --green-dark: #2e7d32;
+    --text: #222;
+    --muted: #666;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--text);
+    background: var(--green-bg);
+  }
+
+  a { color: inherit; }
+  [hidden] { display: none !important; }
+
+  /* Dito po yung design ng Sidebar (yung nasa kaliwa na may logo at menu) */
+  header {
+    width: 220px;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px 16px;
+    border-right: 1px solid var(--green-line);
+    background: var(--green-light);
+  }
+
+  .logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--green);
+    text-decoration: none;
+  }
+
+  .user-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px;
+    border: 1px solid var(--green);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  nav { display: flex; flex-direction: column; gap: 8px; }
+
+  nav a {
+    display: block;
+    padding: 10px 14px;
+    border: 1px solid var(--green);
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  nav a.active { color: var(--green); }
+
+  /* Dito po yung design ng main na laman ng bawat page */
+  main {
+    flex: 1;
+    min-width: 0;
+    max-width: 760px;
+    padding: 40px 20px 60px;
+  }
+
+  h1 { margin: 0 0 8px; font-size: 30px; }
+  h2 { margin: 28px 0 12px; font-size: 20px; }
+  p { line-height: 1.55; color: #444; }
+  .muted { color: var(--muted); font-size: 14px; }
+
+  /* Dito po yung design ng mga Button */
+  .btn {
+    display: inline-block;
+    margin: 4px 6px 4px 0;
+    padding: 10px 18px;
+    border: 1px solid var(--green);
+    border-radius: 6px;
+    background: var(--green);
+    color: #1a1a1a;
+    font: inherit;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .btn:hover { opacity: .9; }
+  .btn.outline { background: #fff; color: var(--green); }
+
+  /* Dito po yung design ng mga Card at listahan (tutors, subjects) */
+  .choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 28px;
+  }
+
+  .box {
+    padding: 20px;
+    border: 1px solid var(--green);
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .box h2 { margin-top: 0; }
+
+  .list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .item {
+    display: block;
+    padding: 14px;
+    border: 1px solid var(--green);
+    border-radius: 8px;
+    background: #fff;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .item:hover { box-shadow: 0 0 0 1px var(--green); }
+  .item b { display: block; margin-bottom: 4px; }
+  .item span { font-size: 13px; color: var(--muted); }
+
+  .card {
+    margin-top: 12px;
+    padding: 16px;
+    border: 1px solid var(--green);
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .card b { font-size: 16px; }
+  .tags { margin: 8px 0; }
+
+  .tag {
+    display: inline-block;
+    margin: 2px 4px 2px 0;
+    padding: 2px 8px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  .notice {
+    max-width: 480px;
+    margin-top: 14px;
+    padding: 12px;
+    border: 1px solid var(--green);
+    border-radius: 6px;
+    color: var(--green);
+  }
+
+  .faq { padding: 12px 0; border-top: 1px solid #ddd; }
+  .faq b { display: block; margin-bottom: 4px; }
+
+  /* Dito po yung design ng mga Form (Log in, Sign up, Register) */
+  form {
+    display: grid;
+    gap: 12px;
+    max-width: 480px;
+    margin-top: 16px;
+  }
+
+  label {
+    display: grid;
+    gap: 4px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 9px;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    font: inherit;
+    font-size: 14px;
+  }
+
+  textarea { min-height: 80px; }
+
+  .field-title { font-size: 14px; font-weight: 700; }
+
+  .checks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+    padding: 12px;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    background: #fff;
+  }
+
+  .checks label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  .checks input { width: auto; }
+
+  .pw { position: relative; display: block; }
+  .pw input { padding-right: 46px; }
+
+  .eye {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 3px 8px;
+    border: 1px solid var(--green);
+    border-radius: 6px;
+    background: #fff;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* Dito po yung design ng picture o initials ng user */
+  .avatar {
+    width: 96px;
+    height: 96px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid var(--green);
+    border-radius: 50%;
+    background: var(--green-light);
+    color: #1a1a1a;
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  .avatar.sm { width: 40px; height: 40px; font-size: 14px; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .person { display: flex; align-items: center; gap: 12px; }
+  .profile-top { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+
+  /* Dito po yung design ng Chat box at ng mga message bubble */
+  .messenger {
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+    min-height: 420px;
+    max-width: 640px;
+    margin-top: 12px;
+    overflow: hidden;
+    border: 1px solid var(--green-line);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
+  }
+
+  .m-head {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--green-light);
+    background: #fff;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .m-head .avatar.sm { width: 36px; height: 36px; }
+
+  #chatLog {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 16px;
+    background: #fff;
+  }
+
+  .row { display: flex; margin: 2px 0; }
+  .row.me { justify-content: flex-end; }
+  .row.them { justify-content: flex-start; }
+
+  .bubble {
+    padding: 8px 14px;
+    border-radius: 18px;
+    font-size: 15px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  /* Ito po ung nag aayos ng laki ng bubble para hindi bumaba ang mga letra */
+  .row > div { max-width: 72%; min-width: 0; }
+
+  .row.me .bubble {
+    background: var(--green);
+    color: #1a1a1a;
+    border-bottom-right-radius: 5px;
+  }
+
+  .row.them .bubble {
+    background: #f0f2f5;
+    color: #1a1a1a;
+    border-bottom-left-radius: 5px;
+  }
+
+  .meta { margin: 3px 8px 10px; font-size: 11px; color: #888; }
+  .row.me .meta { text-align: right; }
+  .tick { margin-left: 4px; font-size: 11px; color: #888; }
+  .tick.seen { color: var(--green-dark); font-weight: 700; }
+  .empty-chat { margin: auto; color: var(--muted); font-size: 14px; text-align: center; }
+
+  .m-foot {
+    display: flex;
+    gap: 8px;
+    max-width: none;
+    margin: 0;
+    padding: 10px 12px;
+    border-top: 1px solid var(--green-light);
+    background: #fff;
+  }
+
+  #chatInput {
+    flex: 1;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 20px;
+    background: #f0f2f5;
+    font-size: 15px;
+  }
+
+  #chatInput:focus { outline: 2px solid var(--green); }
+
+  .m-send {
+    padding: 0 18px;
+    border: 1px solid var(--green);
+    border-radius: 20px;
+    background: var(--green);
+    color: #1a1a1a;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .m-send:hover { background: #5fb361; }
+
+  footer {
+    width: 100%;
+    padding: 24px;
+    border-top: 1px solid #ddd;
+    color: #888;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  /* Ito po ung nag papaayos ng itsura ng site kapag cellphone ang gamit */
+  @media (max-width: 700px) {
+    header {
+      width: 100%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 14px 16px;
+      border-right: 0;
+      border-bottom: 1px solid var(--green-line);
+    }
+
+    nav { flex-direction: row; flex-wrap: wrap; }
+    nav a { display: inline-block; }
+    main { max-width: none; }
+  }
+
+  @media (max-width: 600px) {
+    .choices { grid-template-columns: 1fr; }
+    h1 { font-size: 24px; }
+  }
+  /* Ito po ung design ng Notification na pwedeng pindutin */
+  a.card { display: block; text-decoration: none; color: inherit; }
+  a.card:hover { border-color: var(--green); }
+  /* Dito po yung design ng bilog na logo sa Sidebar */
+  .logo { display:block; width:120px; max-width:100%; margin:0 auto; padding:0; border-radius:50%; background:#fff; }
+  .logo img { display:block; width:100%; aspect-ratio:1/1; height:auto; border-radius:50%; border:2px solid var(--green); } 
+</style>
+</head>
+<body>
+
+<header>
+  <a class="user-chip" id="userChip" href="#profile" hidden>
+    <div class="avatar sm" id="headerAvatar"></div>
+    <span id="headerName"></span>
+  </a>
+  <a class="logo" href="#home" aria-label="Tutorme.web home"><img src="data:image/png;base64,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" alt="Tutorme.web logo"></a>
+  <nav id="nav"></nav>
+</header>
+
+<main>
+
+  <!-- Dito po yung Home page ng code (pagpipilian kung Student o Tutor) -->
+  <section id="home">
+    <h1>Welcome to Tutorme.web</h1>
+    <p>Find a tutor for your college subjects, or register as a tutor and share what you know.</p>
+    <div class="choices">
+      <div class="box">
+        <h2>I am a student</h2>
+        <p class="muted">Search tutors by subject and area, and view their details.</p>
+        <a class="btn" href="#student">Go to student home</a>
+      </div>
+      <div class="box">
+        <h2>I am a tutor</h2>
+        <p class="muted">Create a profile, set your rates and availability, and get students.</p>
+        <a class="btn outline" href="#tutor">Go to tutor home</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dito po yung mga page para sa Student (Student home, Find tutors, Subjects) -->
+  <section id="student" hidden>
+    <h1>Student home</h1>
+    <p>Get help with your subjects from tutors who can teach them well.</p>
+    <a class="btn" href="#student-find">Find tutors</a>
+    <a class="btn outline" href="#student-subjects">Browse subjects</a>
+  </section>
+
+  <!-- Dito po yung Find a tutor page (search ng tutor) -->
+  <section id="student-find" hidden>
+    <h1>Find a tutor</h1>
+    <form id="searchForm">
+      <label>Subject, tutor name, or area
+        <input id="q" placeholder="e.g. Programming, Maria, Online">
+      </label>
+      <div><button class="btn" type="submit">Search</button></div>
+    </form>
+    <p class="muted" id="findCount"></p>
+    <div id="findResults"></div>
+  </section>
+
+  <!-- Dito po yung Subjects page (listahan ng mga subject) -->
+  <section id="student-subjects" hidden>
+    <h1>Subjects</h1>
+    <p class="muted">Choose a subject to see the tutors who teach it.</p>
+    <div class="list" id="subjectList"></div>
+  </section>
+
+  <!-- Dito po yung page ng mga tutor sa isang subject -->
+  <section id="subject-detail" hidden>
+    <a class="btn outline" href="#student-subjects">Back to subjects</a>
+    <h1 id="subjectTitle"></h1>
+    <div id="subjectTutors"></div>
+  </section>
+
+  <!-- Dito po yung mga page para sa Tutor (Tutor home at Register as a tutor) -->
+  <section id="tutor" hidden>
+    <h1>Tutor home</h1>
+    <p>Share your knowledge with students. Register your profile, and we will verify it before it goes live.</p>
+    <a class="btn" href="#tutor-register">Register as a tutor</a>
+    <a class="btn outline" href="#student-subjects">See subjects students need</a>
+  </section>
+
+  <!-- Dito po yung Register as a tutor page (form para maging tutor) -->
+  <section id="tutor-register" hidden>
+    <h1>Register as a tutor</h1>
+    <form id="tutorForm">
+      <label>Full name <input required></label>
+      <label>Email <input type="email" required></label>
+      <div class="field">
+        <span class="field-title">Subjects you can teach (choose one or more)</span>
+        <div class="checks" id="tSubjects"></div>
+      </div>
+      <label>Rate per hour (₱) <input type="number" min="0" required></label>
+      <label>Availability <input placeholder="e.g. Weekday evenings" required></label>
+      <label>Location or online
+        <select>
+          <option>Online</option>
+          <option>In-person</option>
+          <option>Both</option>
+        </select>
+      </label>
+      <label>Qualifications and experience <textarea required></textarea></label>
+      <label>Profile photo <input type="file" id="tPhoto" accept="image/*"></label>
+      <label>Upload ID or certificates <input type="file" multiple></label>
+      <div><button class="btn" type="submit">Submit for verification</button></div>
+    </form>
+    <div class="notice" id="tutorNotice" hidden>
+      Thank you. We will review your documents and email you once you are verified.
+    </div>
+  </section>
+
+  <!-- Dito po yung Messages page (listahan ng mga usapan mo) -->
+  <section id="messages" hidden>
+    <h1>Messages</h1>
+    <p class="muted">Choose a tutor to open the chat box.</p>
+    <div class="list" id="messageList"></div>
+  </section>
+
+  <!-- Ito po ung Chat box kung saan nag-uusap ang student at tutor -->
+  <section id="chat" hidden>
+    <a class="btn outline" href="#messages">Back to messages</a>
+    <div class="messenger">
+      <div class="m-head" id="chatTitle"></div>
+      <div id="chatLog"></div>
+      <form class="m-foot" id="chatForm">
+        <input id="chatInput" placeholder="Aa" autocomplete="off">
+        <button class="m-send" type="submit">Send</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Dito po yung Notifications page -->
+  <section id="notifications" hidden>
+    <h1>Notifications</h1>
+    <div id="notifList"></div>
+  </section>
+
+  <!-- Dito po yung Profile page ng user -->
+  <section id="profile" hidden>
+    <h1>Profile</h1>
+    <div class="profile-top">
+      <div class="avatar" id="profileAvatar"></div>
+    </div>
+    <form id="profileForm">
+      <label>Profile photo <input type="file" id="pPhoto" accept="image/*"></label>
+      <label>Full name <input id="pName" required></label>
+      <label>Email <input type="email" id="pEmail" required></label>
+      <label>Role
+        <select id="pRole">
+          <option>Student</option>
+          <option>Tutor</option>
+        </select>
+      </label>
+
+      <div id="tutorFields" hidden>
+        <div class="field">
+          <span class="field-title">Subjects I can teach</span>
+          <div class="checks" id="pSubjects"></div>
+        </div>
+        <label>Rate per hour (₱) <input type="number" min="0" id="pRate"></label>
+        <label>Availability <input id="pAvail" placeholder="e.g. Weekday evenings"></label>
+        <label>About me <textarea id="pAbout"></textarea></label>
+      </div>
+
+      <div><button class="btn" type="submit">Save profile</button></div>
+    </form>
+    <div class="notice" id="profileNotice" hidden>Your profile has been saved.</div>
+  </section>
+
+  <!-- Dito po yung Log in page ng code -->
+  <section id="signin" hidden>
+    <h1>Log in</h1>
+    <form id="signinForm">
+      <label>Email <input type="email" id="siEmail" required></label>
+      <label>Password
+        <span class="pw">
+          <input type="password" id="siPass" required>
+          <button type="button" class="eye" data-target="siPass" aria-label="Show password">👁</button>
+        </span>
+      </label>
+      <div><button class="btn" type="submit">Log in</button></div>
+    </form>
+    <div class="notice" id="signinError" hidden></div>
+    <p class="muted">No account yet? <a href="#signup">Sign up</a></p>
+  </section>
+
+  <!-- Dito po yung Sign up page ng code (dito gumagawa ng account) -->
+  <section id="signup" hidden>
+    <h1>Sign up</h1>
+    <form id="signupForm">
+      <label>Full name <input id="suName" required></label>
+      <label>Email <input type="email" id="suEmail" required></label>
+      <label>Password
+        <span class="pw">
+          <input type="password" id="suPass" minlength="6" required>
+          <button type="button" class="eye" data-target="suPass" aria-label="Show password">👁</button>
+        </span>
+      </label>
+      <label>I am a
+        <select id="suRole">
+          <option>Student</option>
+          <option>Tutor</option>
+        </select>
+      </label>
+      <div><button class="btn" type="submit">Sign up</button></div>
+    </form>
+    <div class="notice" id="signupError" hidden></div>
+    <p class="muted">Already have an account? <a href="#signin">Log in</a></p>
+  </section>
+
+  <!-- Dito po yung About and contact page -->
+  <section id="about" hidden>
+    <h1>About and contact</h1>
+    <h2>Our mission</h2>
+    <p>Tutorme.web makes good tutoring easy to find and easy to trust.</p>
+    <h2>How it works</h2>
+    <p>
+      1. Students search by subject, area, and schedule.<br>
+      2. Tutors register and submit documents for verification.<br>
+      3. Students contact a tutor and book sessions.
+    </p>
+    <h2>Contact</h2>
+    <p>Email: hello@tutorme.web<br>Phone: +63 900 000 0000</p>
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <b>Is it free for students?</b>
+      <span class="muted">Searching and contacting tutors is free. Tutors set their own rates.</span>
+    </div>
+    <div class="faq">
+      <b>How are tutors verified?</b>
+      <span class="muted">We check IDs and qualifications before a profile goes live.</span>
+    </div>
+  </section>
+
+  <!-- Dito po yung tanungan kung sigurado ka bang mag-Log out -->
+  <section id="signout" hidden>
+    <h1>Log out</h1>
+    <div class="card">
+      <p><b>Are you sure you want to log out?</b></p>
+      <button class="btn" id="confirmLogout" type="button">Yes, log out</button>
+      <a class="btn outline" href="#profile">Cancel</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>© 2026 Tutorme.web</footer>
+
+<script>
+  // Maikling paraan para kunin ang isang element gamit ang id nito
+  const $ = id => document.getElementById(id);
+
+  // Ito po ung nag tatanda kung anong page ang bukas ngayon (para gumana ang pag-lipat ng page kahit sa preview)
+  let curHash = location.hash;
+  // Ito po ung nag papalit ng page kapag may pinindot na link o button
+  function setHash(h) {
+    curHash = h;
+    try { if (location.hash !== h) location.hash = h; } catch (err) { /* hindi pwedeng palitan ang address sa preview */ }
+    route();
+  }
+
+  // Dito po yung listahan ng mga Subject na pwedeng i-tutor
+  const subjects = [
+    { id: 'understanding-self', name: 'Understanding the Self', keywords: 'identity personality psychology' },
+    { id: 'reading-history', name: 'Reading and Philippine History with Indigenous People Studies', keywords: 'reading history philippines indigenous' },
+    { id: 'rizal', name: 'The Life and Works of Jose Rizal', keywords: 'rizal noli filibusterismo history' },
+    { id: 'people-earth', name: "People and Earth's Ecosystem", keywords: 'environment ecosystem ecology' },
+    { id: 'intro-computing', name: 'Introduction to Computing', keywords: 'computer hardware software computing' },
+    { id: 'pc-troubleshooting', name: 'PC Troubleshooting with Basic Electronics', keywords: 'pc repair electronics hardware' },
+    { id: 'programming-1', name: 'Computer Programming 1', keywords: 'programming coding python java c' },
+    { id: 'nstp-1', name: 'National Service Training Program 1', keywords: 'nstp civic community service' },
+    { id: 'pathfit-1', name: 'PATHFIT 1', keywords: 'pathfit fitness health exercise' }
+  ];
+
+  // Dito po yung listahan ng lahat ng page (section) ng site
+  const views = [
+    'home', 'student', 'student-find', 'student-subjects', 'subject-detail',
+    'tutor', 'tutor-register', 'about', 'messages', 'chat',
+    'notifications', 'profile', 'signin', 'signup', 'signout'
+  ];
+
+  // Dito po yung mga link sa Sidebar menu depende kung Home, Student o Tutor ang page
+  const navItems = {
+    home: [['#home', 'Home'], ['#about', 'About']],
+    student: [
+      ['#home', 'Home'], ['#student-find', 'Find tutors'], ['#student-subjects', 'Subjects'],
+      ['#messages', 'Messages'], ['#notifications', 'Notifications'], ['#profile', 'Profile'],
+      ['#about', 'About']
+    ],
+    tutor: [
+      ['#home', 'Home'], ['#tutor-register', 'Register'], ['#student-subjects', 'Subjects'],
+      ['#messages', 'Messages'], ['#notifications', 'Notifications'], ['#profile', 'Profile'],
+      ['#about', 'About']
+    ]
+  };
+
+  // Dito po nakalagay ang mga Tutor, Account, Chat at Notification. Nawawala po ang mga ito pag nag-refresh ang page
+  let tutors = [];
+  const accounts = [];
+  const conversations = []; // bawat chat ay may: id, studentId, tutorId at messages
+  let uid = 0;
+  const notifications = [];
+  let currentUser = null;
+
+  // Dito po yung mga maliliit na function na ginagamit sa buong code
+  function esc(value) {
+    return String(value).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  function subjectName(id) {
+    const subject = subjects.find(s => s.id === id);
+    return subject ? subject.name : '';
+  }
+
+  function initials(name) {
+    return String(name).trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase();
+  }
+
+  function avatarInner(name, photo) {
+    return photo ? `<img src="${esc(photo)}" alt="">` : esc(initials(name));
+  }
+
+  function subjectCheckboxes() {
+    return subjects
+      .map(s => `<label><input type="checkbox" value="${s.id}"> ${esc(s.name)}</label>`)
+      .join('');
+  }
+
+  function nowTime() {
+    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  // Ito po ung gumagawa ng Notification para sa isang user (pwedeng lagyan ng link papunta sa chat)
+  function notify(text, to, link) {
+    notifications.unshift({ to: to || currentUser.id, text: text, link: link || '' });
+  }
+
+  function userById(id) {
+    return accounts.find(a => a.id === id);
+  }
+
+  function otherPerson(c) {
+    return userById(c.studentId === currentUser.id ? c.tutorId : c.studentId) || { name: 'Unknown' };
+  }
+
+  function inConversation(c) {
+    return !!currentUser && (c.studentId === currentUser.id || c.tutorId === currentUser.id);
+  }
+
+  // Ito po ung nag papakita ng Hire button (hindi lalabas sa sarili mong listing)
+  function hireButton(t) {
+    return currentUser && t.owner === currentUser.id
+      ? '<span class="muted">This is your listing</span>'
+      : `<a class="btn" href="#hire/${tutors.indexOf(t)}">Hire</a>`;
+  }
+
+  // Ito po ung nag papagana ng Hire: gumagawa ng private chat ng student at tutor, tapos nag-notif sa tutor na may nag-hire sa kanya
+  function hire(i) {
+    const t = tutors[i];
+    if (!t || !t.owner || t.owner === currentUser.id) { setHash('#messages'); return; }
+    let c = conversations.find(x => x.studentId === currentUser.id && x.tutorId === t.owner);
+    if (!c) {
+      c = { id: conversations.length, studentId: currentUser.id, tutorId: t.owner, messages: [] };
+      conversations.push(c);
+      notify(currentUser.name + ' hired you as their tutor.', t.owner, '#chat/' + c.id);
+      notify('You hired ' + t.name + '.', currentUser.id, '#chat/' + c.id);
+    }
+    setHash('#chat/' + c.id);
+  }
+
+  // Ito po ung nag papakita ng error message
+  function showError(el, message) {
+    el.textContent = message;
+    el.hidden = false;
+  }
+
+  // Ito po ung nag dadala sa Profile page pagka-Log in o Sign up
+  function goHome(user) {
+    setHash('#profile');
+  }
+
+  // Dito po yung mga function na nag papakita ng laman ng bawat page
+  // Ito po ung design ng bawat tutor card (pangalan, rate, schedule at Hire button)
+  function tutorCard(t) {
+    return `
+      <div class="card">
+        <div class="person">
+          <div class="avatar sm">${avatarInner(t.name, t.photo)}</div>
+          <b>${esc(t.name)}</b>
+        </div>
+        <div class="tags"><span class="tag">${esc(subjectName(t.subject))}</span></div>
+        <p>${esc(t.about)}</p>
+        <p class="muted">
+          Rate: ₱${esc(t.rate)}/hour · Schedule: ${esc(t.schedule)} · Location: ${esc(t.area)}
+        </p>
+        ${hireButton(t)}
+      </div>`;
+  }
+
+  // Ito po ung gumagawa ng mga link sa Sidebar menu
+  function renderNav(group) {
+    const hash = '#' + (curHash.slice(1) || 'home');
+    const items = currentUser ? [...(navItems[group] || navItems.home)] : [];
+
+    if (currentUser) {
+      items.push(['#signout', 'Sign out (' + currentUser.name + ')']);
+    } else {
+      items.push(['#signin', 'Log in'], ['#signup', 'Sign up']);
+    }
+
+    $('nav').innerHTML = items
+      .map(([href, label]) => `<a href="${href}" class="${href === hash ? 'active' : ''}">${label}</a>`)
+      .join('');
+  }
+
+  // Ito po ung nag papakita ng pangalan at picture mo sa taas ng Sidebar
+  function renderHeaderUser() {
+    const chip = $('userChip');
+    if (!currentUser) {
+      chip.hidden = true;
+      return;
+    }
+    chip.hidden = false;
+    $('headerAvatar').innerHTML = avatarInner(currentUser.name, currentUser.photo);
+    $('headerName').textContent = currentUser.name;
+  }
+
+  function renderSubjects() {
+    $('subjectList').innerHTML = subjects.map(s => {
+      const count = tutors.filter(t => t.subject === s.id).length;
+      return `
+        <a class="item" href="#subject/${s.id}">
+          <b>${esc(s.name)}</b>
+          <span>${count} tutor${count === 1 ? '' : 's'}</span>
+        </a>`;
+    }).join('');
+  }
+
+  function renderSubjectDetail(id) {
+    const list = tutors.filter(t => t.subject === id);
+    $('subjectTitle').textContent = subjectName(id);
+    $('subjectTutors').innerHTML = list.length
+      ? list.map(tutorCard).join('')
+      : '<p class="muted">No tutors yet for this subject.</p>';
+  }
+
+  function renderFind(query) {
+    const q = query.trim().toLowerCase();
+    const list = tutors.filter(t => {
+      const text = `${t.name} ${subjectName(t.subject)} ${t.area} ${t.about}`.toLowerCase();
+      return !q || text.includes(q);
+    });
+    $('findCount').textContent = `${list.length} tutor${list.length === 1 ? '' : 's'} found`;
+    $('findResults').innerHTML = list.map(tutorCard).join('');
+  }
+
+  // Ito po ung nag papakita ng listahan ng Messages mo (ikaw lang ang makakakita ng sarili mong chat)
+  function renderMessages() {
+    const mine = conversations.filter(inConversation);
+    $('messageList').innerHTML = mine.length
+      ? mine.map(c => {
+          const last = c.messages[c.messages.length - 1];
+          const preview = last ? esc(last.text) : 'Start a chat';
+          return `
+            <a class="item" href="#chat/${c.id}">
+              <b>${esc(otherPerson(c).name)}</b>
+              <span>${preview}</span>
+            </a>`;
+        }).join('')
+      : '<p class="muted">No conversations yet. They appear here when you hire a tutor or a student hires you.</p>';
+  }
+
+  // Ito po ung nag papakita ng Notifications mo (pag pinindot, diretso sa chat)
+  function renderNotifications() {
+    const mine = notifications.filter(n => n.to === currentUser.id);
+    $('notifList').innerHTML = mine.length
+      ? mine.map(n => n.link
+          ? `<a class="card" href="${esc(n.link)}">${esc(n.text)}</a>`
+          : `<div class="card">${esc(n.text)}</div>`).join('')
+      : '<p class="muted">No notifications yet.</p>';
+  }
+
+  // Ito po ung nag papagana ng Chat system: ipinapakita ang usapan. Kapag hindi sa iyo ang chat, ibabalik ka sa Messages
+  function renderChat(i) {
+    const c = conversations[i];
+    if (!c || !inConversation(c)) {
+      setHash('#messages');
+      return false;
+    }
+
+    const other = otherPerson(c);
+    c.messages.forEach(m => { if (m.from !== currentUser.id) m.seen = true; });
+
+    $('chatTitle').innerHTML =
+      `<span class="person"><span class="avatar sm">${avatarInner(other.name, other.photo)}</span>` +
+      `Chat with ${esc(other.name)}</span>`;
+
+    const log = $('chatLog');
+    log.innerHTML = c.messages.length
+      ? c.messages.map(m => {
+          const mine = m.from === currentUser.id;
+          const tick = mine ? `<span class="tick ${m.seen ? 'seen' : ''}">${m.seen ? '✓✓' : '✓'}</span>` : '';
+          return `
+            <div class="row ${mine ? 'me' : 'them'}">
+              <div>
+                <div class="bubble">${esc(m.text)}</div>
+                <div class="meta">${esc(m.time || '')}${tick}</div>
+              </div>
+            </div>`;
+        }).join('')
+      : '<p class="empty-chat">No messages yet. Say hello to start the chat.</p>';
+
+    log.scrollTop = log.scrollHeight;
+    $('chatForm').dataset.conv = i;
+    return true;
+  }
+
+  // Ito po ung nag papakita ng laman ng Profile mo
+  function renderProfile() {
+    if (!currentUser) return;
+    const info = currentUser.tutorInfo || {};
+    const picked = currentUser.subjects || [];
+
+    $('pName').value = currentUser.name;
+    $('pEmail').value = currentUser.email;
+    $('pRole').value = currentUser.role;
+    $('profileAvatar').innerHTML = avatarInner(currentUser.name, currentUser.photo);
+    $('tutorFields').hidden = currentUser.role !== 'Tutor';
+    document.querySelectorAll('#pSubjects input').forEach(c => {
+      c.checked = picked.includes(c.value);
+    });
+    $('pRate').value = info.rate || '';
+    $('pAvail').value = info.availability || '';
+    $('pAbout').value = info.about || '';
+  }
+
+  // Ito po ung nag papalit-palit ng page kapag may pinindot (Home, Log in, Sign up, Chat, atbp.)
+  function route() {
+    const h = curHash.slice(1) || 'home';
+    let id = h;
+
+    if (h === 'signout') {
+      if (!currentUser) {
+        setHash('#signin');
+        return;
+      }
+      id = 'signout';
+    } else if (!currentUser && h !== 'signin' && h !== 'signup') {
+      setHash('#signin');
+      return;
+    } else if (h.startsWith('subject/')) {
+      id = 'subject-detail';
+      renderSubjectDetail(h.split('/')[1]);
+    } else if (h.startsWith('hire/')) {
+      hire(Number(h.split('/')[1]));
+      return;
+    } else if (h.startsWith('chat/')) {
+      id = 'chat';
+      if (!renderChat(Number(h.split('/')[1]))) return;
+    } else if (!views.includes(h)) {
+      id = 'home';
+    }
+
+    let group = 'student';
+    if (id === 'home' || id === 'about') group = 'home';
+    else if (id.startsWith('tutor')) group = 'tutor';
+
+    views.forEach(v => { $(v).hidden = v !== id; });
+    renderNav(group);
+    renderHeaderUser();
+
+    if (id === 'student-subjects') renderSubjects();
+    if (id === 'student-find') renderFind($('q').value);
+    if (id === 'messages') renderMessages();
+    if (id === 'notifications') renderNotifications();
+    if (id === 'profile') renderProfile();
+
+    window.scrollTo(0, 0);
+  }
+
+  // Dito po yung pag-set up ng mga button at form pag bukas ng site
+  $('tSubjects').innerHTML = subjectCheckboxes();
+  $('pSubjects').innerHTML = subjectCheckboxes();
+
+  // Ito po ung nag papagana ng Search sa Find a tutor
+  $('searchForm').addEventListener('submit', e => {
+    e.preventDefault();
+    renderFind($('q').value);
+  });
+
+  $('q').addEventListener('input', e => renderFind(e.target.value));
+
+  // Ito po ung nag papagana ng Register as a tutor (dito nase-save ang listing ng tutor)
+  $('tutorForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const f = e.target;
+    const inputs = f.querySelectorAll('input[required], input[type=number]');
+    const picked = [...$('tSubjects').querySelectorAll('input:checked')].map(c => c.value);
+
+    if (picked.length === 0) {
+      alert('Please choose at least one subject you can teach.');
+      return;
+    }
+
+    const photoFile = $('tPhoto').files[0];
+    const photo = photoFile ? URL.createObjectURL(photoFile) : '';
+
+    picked.forEach(subjectId => {
+      tutors.push({
+        name: inputs[0].value.trim(),
+        subject: subjectId,
+        rate: Number(inputs[2].value),
+        area: f.querySelector('select').value,
+        schedule: inputs[3].value.trim(),
+        about: f.querySelector('textarea').value.trim(),
+        photo: photo,
+        owner: currentUser.id
+      });
+    });
+
+    currentUser.role = 'Tutor';
+    currentUser.subjects = picked;
+    currentUser.tutorInfo = {
+      rate: Number(inputs[2].value),
+      availability: inputs[3].value.trim(),
+      about: f.querySelector('textarea').value.trim()
+    };
+
+    notify('Your tutor registration was submitted for verification.');
+    f.reset();
+    $('tSubjects').querySelectorAll('input').forEach(c => { c.checked = false; });
+    $('tutorNotice').hidden = false;
+  });
+
+  // Ito po ung nag papagana ng Sign up (gumagawa ng bagong account)
+  $('signupForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const email = $('suEmail').value.trim().toLowerCase();
+    const err = $('signupError');
+
+    if (accounts.some(a => a.email === email)) {
+      showError(err, 'An account with this email already exists. Please log in instead.');
+      return;
+    }
+
+    const user = {
+      id: 'u' + (++uid),
+      name: $('suName').value.trim(),
+      email: email,
+      password: $('suPass').value,
+      role: $('suRole').value,
+      subjects: [],
+      tutorInfo: {}
+    };
+
+    accounts.push(user);
+    currentUser = user;
+    notify('Welcome to Tutorme.web, ' + user.name + '!');
+    e.target.reset();
+    err.hidden = true;
+    goHome(user);
+    route();
+  });
+
+  // Ito po ung nag papagana ng Log in (chine-check ang email at password)
+  $('signinForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const email = $('siEmail').value.trim().toLowerCase();
+    const pass = $('siPass').value;
+    const user = accounts.find(a => a.email === email && a.password === pass);
+    const err = $('signinError');
+
+    if (!user) {
+      showError(err, 'Wrong email or password. Sign up first if you do not have an account.');
+      return;
+    }
+
+    currentUser = user;
+    notify('Logged in as ' + user.name + '.');
+    e.target.reset();
+    err.hidden = true;
+    goHome(user);
+    route();
+  });
+
+  // Ito po ung nag papakita ng mga tutor fields sa Profile kapag Tutor ang role
+  $('pRole').addEventListener('change', e => {
+    $('tutorFields').hidden = e.target.value !== 'Tutor';
+  });
+
+  $('pPhoto').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) {
+      $('profileAvatar').innerHTML = `<img src="${URL.createObjectURL(file)}" alt="">`;
+    }
+  });
+
+  // Ito po ung nag papagana ng Save profile
+  $('profileForm').addEventListener('submit', e => {
+    e.preventDefault();
+    if (!currentUser) return;
+
+    currentUser.name = $('pName').value.trim();
+    currentUser.email = $('pEmail').value.trim().toLowerCase();
+    currentUser.role = $('pRole').value;
+
+    const file = $('pPhoto').files[0];
+    if (file) currentUser.photo = URL.createObjectURL(file);
+
+    // Dito po pinapalitan ang listing ng tutor base sa bagong laman ng Profile
+    tutors = tutors.filter(t => t.owner !== currentUser.id);
+
+    if (currentUser.role === 'Tutor') {
+      const picked = [...document.querySelectorAll('#pSubjects input:checked')].map(c => c.value);
+      const info = {
+        rate: Number($('pRate').value) || 0,
+        availability: $('pAvail').value.trim(),
+        about: $('pAbout').value.trim()
+      };
+
+      currentUser.subjects = picked;
+      currentUser.tutorInfo = info;
+
+      picked.forEach(subjectId => {
+        tutors.push({
+          name: currentUser.name,
+          subject: subjectId,
+          rate: info.rate,
+          area: 'Online',
+          schedule: info.availability,
+          about: info.about,
+          photo: currentUser.photo || '',
+          owner: currentUser.id
+        });
+      });
+    } else {
+      currentUser.subjects = [];
+    }
+
+    renderProfile();
+    renderHeaderUser();
+    $('profileNotice').hidden = false;
+  });
+
+  // Ito po ung nag papagana ng pag-send ng message sa Chat
+  $('chatForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const input = $('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const i = Number(e.currentTarget.dataset.conv);
+    const c = conversations[i];
+    if (!c || !inConversation(c)) return;
+
+    c.messages.push({ from: currentUser.id, text: text, seen: false, time: nowTime() });
+    input.value = '';
+    renderChat(i);
+  });
+
+  // Ito po ung nag papagana ng 👁 button para makita o matago ang password
+  document.querySelectorAll('.eye').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = $(btn.dataset.target);
+      const showing = input.type === 'password';
+      input.type = showing ? 'text' : 'password';
+      btn.textContent = showing ? '🙈' : '👁';
+      btn.setAttribute('aria-label', showing ? 'Hide password' : 'Show password');
+    });
+  });
+
+  // Ito po ung nag papagana ng Log out
+  $('confirmLogout').addEventListener('click', () => {
+    currentUser = null;
+    setHash('#signin');
+    route();
+  });
+
+  // Ito po ung nag babantay kapag nag-Back o nag-palit ng address ang browser
+  window.addEventListener('hashchange', () => {
+    if (location.hash !== curHash) { curHash = location.hash; route(); }
+  });
+
+  // Ito po ung nag papagana ng mga Submit button kahit sa preview na bawal mag-submit ng form
+  document.addEventListener('click', e => {
+    const btn = e.target.closest && e.target.closest('button[type=submit]');
+    if (!btn || !btn.form) return;
+    e.preventDefault();
+    if (!btn.form.reportValidity()) return;
+    btn.form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+  });
+
+  // Ito po ung nag papagana ng mga link kahit sa preview na bawal mag-palit ng address
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    e.preventDefault();
+    setHash(a.getAttribute('href'));
+  });
+  // Ito po ung unang nag papakita ng page pag bukas ng site
+  route();
+</script>
+</body>
+</html>
